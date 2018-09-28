@@ -54,7 +54,8 @@
   <ItemGroup>
     <Compile Include="Data\Context.cs" />
     <Compile Include="Data\DatabaseInitializer.cs" />
-    <Compile Include="Model\Helper.cs" />
+    <Compile Include="Handler\_console.cs" />
+    <Compile Include="Handler\_item.cs" />
     <Compile Include="Model\Item.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

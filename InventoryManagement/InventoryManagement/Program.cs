@@ -10,12 +10,12 @@ namespace InventoryManagement
         {
             Console.WriteLine("Data loading");
             
-            foreach (var item in Helper.GetItemsFromDatabase())
+            foreach (var item in ItemHandler.GetItemsFromDatabase())
             {
                 Console.WriteLine(item.Name);
             }
-            Console.WriteLine(Helper.SetItemQuantityById(1,2));
-            Helper.AddItem("Cup", "Another cup", 1);
+            Console.WriteLine(ItemHandler.SetItemQuantityById(1,2));
+            ItemHandler.AddItem("Cup", "Another cup", 1);
             Console.ReadLine();
         }
     }

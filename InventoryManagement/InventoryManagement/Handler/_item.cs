@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagement.Model
 {
-    public class Helper
+    public class ItemHandler
     {
         /// <summary>
         /// Returns item by id
@@ -134,8 +134,7 @@ namespace InventoryManagement.Model
                 }
             }
         }
-
-
+        
         /// <summary>
         /// Adds an item if it does not exist
         /// </summary>
