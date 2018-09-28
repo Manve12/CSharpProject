@@ -1,7 +1,5 @@
 ﻿using InventoryManagement.Handler;
-using InventoryManagement.Model;
 using System;
-using System.Linq;
 
 namespace InventoryManagement
 {
@@ -9,8 +7,10 @@ namespace InventoryManagement
     {
         static void Main(string[] args)
         { 
+            //display console navigation
             _console.ConsoleNavigationOutput();
 
+            //check input until the user types one of the quit variables
             var input = _console.CheckConsoleInput(Console.ReadLine());
             while (input == true)
             {

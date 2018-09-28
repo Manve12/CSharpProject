@@ -1,17 +1,14 @@
 ﻿using InventoryManagement.Model;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryManagement.Handler
 {
     public class _console
     {
         /// <summary>
-        /// Called when application starts to display navigation
+        /// Called when application starts to display navigation - lines read from consoleOutput.txt
         /// </summary>
         public static void ConsoleNavigationOutput()
         {
@@ -19,7 +16,7 @@ namespace InventoryManagement.Handler
             using (var reader = new StreamReader(directory))
             {
                 var line = "";
-                while ( (line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     Console.WriteLine(line);
                 }
@@ -43,12 +40,17 @@ namespace InventoryManagement.Handler
             }
         }
 
-        private static void _checkInputForAddItem(int addItemFunctionNumber)
+        /// <summary>
+        /// Checks input before calling _addItem function
+        /// </summary>
+        /// <param name="addItemFunctionNumber">1: AddItem will be called | 2: AddItemIfExists will be called</param>
+        private static void _checkInputForAddingItem(int addItemFunctionNumber)
         {
-            if (addItemFunctionNumber == 1)
+            if (addItemFunctionNumber == 1) // add item
                 Console.WriteLine("Will add a new item to the database OR will add the entered quantity to already existing item");
-            else if (addItemFunctionNumber == 2)
+            else if (addItemFunctionNumber == 2) // add item or exists
                 Console.WriteLine("Will add a new item to the database IF it does not already exist");
+
             Console.WriteLine("Do you want to proceed (Y/N)?");
             var input = Console.ReadLine();
 
@@ -61,7 +63,7 @@ namespace InventoryManagement.Handler
             if (input.ToString() == "Y")
             {
                 _addItem(addItemFunctionNumber);
-                
+
             }
             else if (input.ToString() == "N")
             {
@@ -70,6 +72,10 @@ namespace InventoryManagement.Handler
             }
         }
 
+        /// <summary>
+        /// Function to handle adding items
+        /// </summary>
+        /// <param name="addItemFunction">1:AddItem will be called | 2:AddItemIfExists will be called</param>
         private static void _addItem(int addItemFunction)
         {
             Console.WriteLine();
@@ -109,6 +115,55 @@ namespace InventoryManagement.Handler
         }
 
         /// <summary>
+        /// Adjust the item quantity by item name
+        /// </summary>
+        private static void _adjustItemQuantityByName()
+        {
+            Console.WriteLine("Name: ");
+            var name = Console.ReadLine();
+            Console.WriteLine("Quantity: ");
+            var quantity = Console.ReadLine();
+
+            int resultQuantityTryParse;
+            while (!(int.TryParse(quantity, out resultQuantityTryParse)))
+            {
+                Console.WriteLine("Quantity must be a number: ");
+                quantity = Console.ReadLine();
+            }
+
+            ItemHandler.SetItemQuantityByName(name, resultQuantityTryParse);
+            _consoleDetails();
+        }
+
+        /// <summary>
+        /// Change the quantity of an item by the item ID
+        /// </summary>
+        private static void _adjustItemQuantityById()
+        {
+            Console.WriteLine("Id: ");
+            var id = Console.ReadLine();
+            Console.WriteLine("Quantity: ");
+            var quantity = Console.ReadLine();
+
+            int resultIdTryParse;
+            while (!(int.TryParse(id, out resultIdTryParse)))
+            {
+                Console.WriteLine("Id must be a number: ");
+                id = Console.ReadLine();
+            }
+
+            int resultQuantityTryParse;
+            while (!(int.TryParse(quantity, out resultQuantityTryParse)))
+            {
+                Console.WriteLine("Quantity must be a number: ");
+                quantity = Console.ReadLine();
+            }
+
+            ItemHandler.SetItemQuantityById(resultIdTryParse, resultQuantityTryParse);
+            _consoleDetails();
+        }
+
+        /// <summary>
         /// Called after user input
         /// </summary>
         /// <param name="input">Input from user</param>
@@ -122,14 +177,19 @@ namespace InventoryManagement.Handler
                     return true;
                 case "2":
                     _consoleDetails();
-                    _checkInputForAddItem(1);
+                    _checkInputForAddingItem(1);
                     return true;
                 case "3":
                     _consoleDetails();
-                    _checkInputForAddItem(2);
+                    _checkInputForAddingItem(2);
                     return true;
                 case "4":
                     _consoleDetails();
+                    _adjustItemQuantityByName();
+                    return true;
+                case "5":
+                    _consoleDetails();
+                    _adjustItemQuantityById();
                     return true;
                 case "Q":
                 case "q":
@@ -144,7 +204,10 @@ namespace InventoryManagement.Handler
                     return true;
             }
         }
-        HandleInheritability user intput
+
+        /// <summary>
+        /// Clears console then shows the navigation
+        /// </summary>
         private static void _consoleDetails()
         {
             Console.Clear();

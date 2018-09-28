@@ -1,10 +1,11 @@
 ﻿using System.Data.Entity;
 using InventoryManagement.Model;
-using System;
-using System.Collections.Generic;
 
 namespace InventoryManagement.Data
 {
+    /// <summary>
+    /// Adds initial values to the database in case it is destroyed
+    /// </summary>
     public class DatabaseInitializer : DropCreateDatabaseIfModelChanges<Context>
     {
         //Change the seed of the database

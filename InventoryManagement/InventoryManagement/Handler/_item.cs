@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryManagement.Model
 {
@@ -22,7 +19,8 @@ namespace InventoryManagement.Model
                 if (item != null)
                 {
                     return item;
-                } else
+                }
+                else
                 {
                     return null;
                 }
@@ -134,7 +132,7 @@ namespace InventoryManagement.Model
                 }
             }
         }
-        
+
         /// <summary>
         /// Adds an item if it does not exist
         /// </summary>

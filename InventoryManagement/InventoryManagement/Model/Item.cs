@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InventoryManagement.Model
+﻿namespace InventoryManagement.Model
 {
+    /// <summary>
+    /// Creates an instance of an item
+    /// </summary>
     public class Item
     {
         public int Id { get; set; }
