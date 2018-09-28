@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Model;
+﻿using InventoryManagement.Handler;
+using InventoryManagement.Model;
 using System;
 using System.Linq;
 
@@ -7,16 +8,14 @@ namespace InventoryManagement
     class Program
     {
         static void Main(string[] args)
-        {
-            Console.WriteLine("Data loading");
-            
-            foreach (var item in ItemHandler.GetItemsFromDatabase())
+        { 
+            _console.ConsoleNavigationOutput();
+
+            var input = _console.CheckConsoleInput(Console.ReadLine());
+            while (input == true)
             {
-                Console.WriteLine(item.Name);
-            }
-            Console.WriteLine(ItemHandler.SetItemQuantityById(1,2));
-            ItemHandler.AddItem("Cup", "Another cup", 1);
-            Console.ReadLine();
+                input = _console.CheckConsoleInput(Console.ReadLine());
+            };
         }
     }
 }
