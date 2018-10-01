@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Model;
+﻿using InventoryManagement.Exceptions;
+using InventoryManagement.Model;
 using System;
 using System.IO;
 using System.Linq;
@@ -115,52 +116,169 @@ namespace InventoryManagement.Handler
         }
 
         /// <summary>
-        /// Adjust the item quantity by item name
+        /// AddItem handler to call the correct _addItem method
         /// </summary>
-        private static void _adjustItemQuantityByName()
+        private static void AddItem()
         {
-            Console.WriteLine("Name: ");
-            var name = Console.ReadLine();
-            Console.WriteLine("Quantity: ");
-            var quantity = Console.ReadLine();
-
-            int resultQuantityTryParse;
-            while (!(int.TryParse(quantity, out resultQuantityTryParse)))
+            Console.Clear();
+            Console.WriteLine("1. Add a new item or adjust the existing item quantity");
+            Console.WriteLine("2. Add a new item if it does not exist");
+            Console.WriteLine("3. Return back to menu");
+            var input = Console.ReadLine();
+            int inputId;
+            
+            while (!(int.TryParse(input, out inputId)))
             {
-                Console.WriteLine("Quantity must be a number: ");
-                quantity = Console.ReadLine();
+                Console.WriteLine("Entered value must be of type integer");
             }
 
-            ItemHandler.SetItemQuantityByName(name, resultQuantityTryParse);
-            _consoleDetails();
+            try
+            {
+                if (inputId == 1 || inputId == 2)
+                {
+                    _addItem(inputId);
+                }
+                else if (inputId == 3)
+                {
+                    _consoleDetails();
+                }
+                else
+                {
+                    AddItem();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddItem();
+                Console.WriteLine(ex.Message);
+            }
+        }
+    
+        /// <summary>
+        /// Adjust item quantity by id
+        /// </summary>
+        /// <param name="id">ID of item</param>
+        /// <param name="quantity">Quantity to set the item too</param>
+        private static void _adjustItemQuantity(int id, int quantity)
+        {
+            if (ItemHandler.GetItemById(id) != null)
+            {
+                ItemHandler.SetItemQuantityById(id, quantity);
+                _consoleDetails();
+            }        
+            else
+            {
+                throw new QuantityIdDoesNotExist("Item under that ID does not exist");
+            }
         }
 
         /// <summary>
-        /// Change the quantity of an item by the item ID
+        /// Adjust item quantity by name
         /// </summary>
-        private static void _adjustItemQuantityById()
+        /// <param name="name">Name of item</param>
+        /// <param name="quantity">Quantity to set the item too</param>
+        private static void _adjustItemQuantity(string name, int quantity)
         {
-            Console.WriteLine("Id: ");
-            var id = Console.ReadLine();
-            Console.WriteLine("Quantity: ");
-            var quantity = Console.ReadLine();
-
-            int resultIdTryParse;
-            while (!(int.TryParse(id, out resultIdTryParse)))
+            if (ItemHandler.GetItemByName(name) != null)
             {
-                Console.WriteLine("Id must be a number: ");
-                id = Console.ReadLine();
+                ItemHandler.SetItemQuantityByName(name, quantity);
+                _consoleDetails();
+            }
+            else
+            {
+                throw new QuantityNameDoesNotExist("Item under that Name does not exist");
+            }
+        }
+
+        /// <summary>
+        /// Adjust item quantity handler - works out which adjustItemQuantity method to call
+        /// </summary>
+        private static void AdjustItemQuantity()
+        {
+            Console.WriteLine("Enter Name or ID to adjust quantity of");
+            string inputType = Console.ReadLine();
+
+            Console.WriteLine("Enter new quantity:");
+            string inputQuantity = Console.ReadLine();
+
+            int quantity;
+            while (!(int.TryParse(inputQuantity, out quantity)))
+            {
+                Console.WriteLine("Quantity must be of type integer");
+                inputQuantity = Console.ReadLine();
             }
 
-            int resultQuantityTryParse;
-            while (!(int.TryParse(quantity, out resultQuantityTryParse)))
-            {
-                Console.WriteLine("Quantity must be a number: ");
-                quantity = Console.ReadLine();
-            }
+            //check if input is of integer type
+            int id;
+            var isId = int.TryParse(inputType, out id);
 
-            ItemHandler.SetItemQuantityById(resultIdTryParse, resultQuantityTryParse);
-            _consoleDetails();
+            try
+            {
+                //is id - call adjust item quantity by id
+                if (isId)
+                {
+                    _adjustItemQuantity(id, quantity);
+                }
+                else // call adjust item quantity by name
+                {
+                    _adjustItemQuantity(inputType, quantity);
+                }
+                _consoleDetails();
+            }
+            catch (Exception ex) // handle the exceptions
+            {
+                _consoleDetails();
+                Console.WriteLine(ex.Message); // output exception message
+            }
+        }
+
+        /// <summary>
+        /// Remove item by id
+        /// </summary>
+        /// <param name="id">ID of item</param>
+        private static void _removeItem(int id)
+        {
+            ItemHandler.RemoveItemById(id);
+        }
+
+        /// <summary>
+        /// Remove item by name
+        /// </summary>
+        /// <param name="name">Name of item</param>
+        private static void _removeItem(string name)
+        {
+            ItemHandler.RemoveItemByName(name);
+        }
+
+        /// <summary>
+        /// Remove Item handler - used to determine which _removeItem method to call
+        /// </summary>
+        private static void RemoveItem()
+        {
+            Console.WriteLine("WARNING: All of the quantity will be removed!");
+            Console.WriteLine("");
+            Console.WriteLine("Enter the Name or ID of the item to remove");
+            var input = Console.ReadLine();
+
+            int id;
+            var isId = int.TryParse(input, out id);
+
+            try
+            {
+                if (isId)
+                {
+                    _removeItem(id);
+                }
+                else
+                {
+                    _removeItem(input);
+                }
+                _consoleDetails();
+            } catch (Exception ex)
+            {
+                _consoleDetails();
+                Console.WriteLine(ex.Message);
+            }
         }
 
         /// <summary>
@@ -177,25 +295,22 @@ namespace InventoryManagement.Handler
                     return true;
                 case "2":
                     _consoleDetails();
-                    _checkInputForAddingItem(1);
+                    AddItem();
                     return true;
                 case "3":
                     _consoleDetails();
-                    _checkInputForAddingItem(2);
+                    AdjustItemQuantity();
                     return true;
                 case "4":
                     _consoleDetails();
-                    _adjustItemQuantityByName();
-                    return true;
-                case "5":
-                    _consoleDetails();
-                    _adjustItemQuantityById();
+                    RemoveItem();
                     return true;
                 case "Q":
                 case "q":
                 case "Quit":
                 case "quit":
                 case "QUIT":
+                    _consoleDetails();
                     Console.WriteLine("- Quitting -");
                     return false;
                 default:

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using InventoryManagement.Exceptions;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
@@ -86,6 +87,53 @@ namespace InventoryManagement.Model
         }
 
         /// <summary>
+        /// Removes item by item id
+        /// </summary>
+        /// <param name="id">Id of item</param>
+        public static void RemoveItemById(int id)
+        {
+            var itemById = GetItemById(id); // get the item
+            if (itemById != null) // check if item exists
+            {
+                _removeItem(itemById);
+            } else
+            {
+                throw new RemoveItemIdDoesNotExist("The ID entered does not exist");
+            }
+        }
+
+        /// <summary>
+        /// Removes item by item name
+        /// </summary>
+        /// <param name="name">Name of item</param>
+        public static void RemoveItemByName(string name)
+        {
+            var itemByName = GetItemByName(name);
+            if (itemByName != null)
+            {
+                _removeItem(itemByName);
+            } else
+            {
+                throw new RemoveItemNameDoesNotExist("The Name entered does not exist");
+            }
+        }
+
+        /// <summary>
+        /// Private method to remove item by the item
+        /// </summary>
+        /// <param name="item">Item to remove</param>
+        private static void _removeItem(Item item)
+        {
+            using (var context = new Context())
+            {
+                context.Item.Attach(item);
+                var itemQuantityEntry = context.Entry(item);
+                itemQuantityEntry.State = EntityState.Deleted;
+                context.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// Sets item quantity by name
         /// </summary>
         /// <param name="name">Name of item</param>
@@ -153,9 +201,14 @@ namespace InventoryManagement.Model
                 return false;
             }
         }
-
-        ///PRIVATES///
-
+        
+        /// <summary>
+        /// Adds item to database - private function
+        /// </summary>
+        /// <param name="context">context currently in</param>
+        /// <param name="name">name of item</param>
+        /// <param name="description">description of item</param>
+        /// <param name="quantity">quantity of item</param>
         private static void _addItem(Context context, string name, string description, int quantity)
         {
             context.Item.Add(
