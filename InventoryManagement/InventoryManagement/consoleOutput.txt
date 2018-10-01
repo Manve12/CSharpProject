@@ -6,6 +6,7 @@
 2. Add item
 3. Update item quantity
 4. Remove item
+5. Update description
 
 Q: Quits the console
 

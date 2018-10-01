@@ -40,4 +40,19 @@ namespace InventoryManagement.Exceptions
         public RemoveItemNameDoesNotExist(string message) : base(message) { }
     }
 
+    public class UpdateDescription : Exception
+    {
+        public UpdateDescription() : base() { }
+        public UpdateDescription(string message) : base(message) { }
+    }
+    public class UpdateDescriptionIdDoesNotExist : Exception
+    {
+        public UpdateDescriptionIdDoesNotExist() : base() { }
+        public UpdateDescriptionIdDoesNotExist(string message) : base(message) { }
+    }
+    public class UpdateDescriptionNameDoesNotExist : Exception
+    {
+        public UpdateDescriptionNameDoesNotExist() : base() { }
+        public UpdateDescriptionNameDoesNotExist(string message) : base(message) { }
+    }
 }

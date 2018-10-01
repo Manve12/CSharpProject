@@ -282,6 +282,58 @@ namespace InventoryManagement.Handler
         }
 
         /// <summary>
+        /// Call item handler to update description by id
+        /// </summary>
+        /// <param name="id">ID of item</param>
+        /// <param name="description">Description of item</param>
+        private static void _updateItemDescription(int id, string description)
+        {
+            ItemHandler.UpdateDescriptionById(id, description);
+        }
+
+        /// <summary>
+        /// Calls item handler to update description by name
+        /// </summary>
+        /// <param name="name">Name of item</param>
+        /// <param name="description">Description of item</param>
+        private static void _updateItemDescription(string name, string description)
+        {
+            ItemHandler.UpdateDescriptionByName(name,description);
+        }
+
+        /// <summary>
+        /// Update item description handler - calls the correct update item description method
+        /// </summary>
+        private static void UpdateItemDescription()
+        {
+            Console.WriteLine("Enter the Name or ID of the item:");
+            var input = Console.ReadLine();
+
+            Console.WriteLine("Enter the new description of the item: ");
+            var description = Console.ReadLine();
+
+            int id;
+            var isId = int.TryParse(input, out id);
+
+            try
+            {
+                if (isId)
+                {
+                    _updateItemDescription(id, description);
+                }
+                else
+                {
+                    _updateItemDescription(input, description);
+                }
+            } 
+            catch (Exception ex)
+            {
+                _consoleDetails();
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Called after user input
         /// </summary>
         /// <param name="input">Input from user</param>
@@ -304,6 +356,10 @@ namespace InventoryManagement.Handler
                 case "4":
                     _consoleDetails();
                     RemoveItem();
+                    return true;
+                case "5":
+                    _consoleDetails();
+                    UpdateItemDescription();
                     return true;
                 case "Q":
                 case "q":

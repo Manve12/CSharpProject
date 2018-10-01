@@ -221,5 +221,58 @@ namespace InventoryManagement.Model
             );
             context.SaveChanges();
         }
+
+        /// <summary>
+        /// Update description handler - used to call the correct update description method
+        /// </summary>
+        /// <param name="item">Item associated</param>
+        /// <param name="description">Description to set to</param>
+        private static void _updateDescription(Item item, string description)
+        {
+            using (var context = new Context())
+            {
+                context.Item.Attach(item);
+                item.Description = description;
+                var itemEntry = context.Entry(item);
+                itemEntry.State = EntityState.Modified;
+                context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Updates item description by id
+        /// </summary>
+        /// <param name="id">ID of item</param>
+        /// <param name="description">Description of item</param>
+        public static void UpdateDescriptionById(int id, string description)
+        {
+            var itemById = GetItemById(id);
+            if (itemById != null)
+            {
+                _updateDescription(itemById, description);
+            }
+            else
+            {
+                throw new UpdateDescriptionIdDoesNotExist("The item under the entered id does not exist.");
+            }
+        }
+
+        /// <summary>
+        /// Updates item description by name
+        /// </summary>
+        /// <param name="name">Name of item</param>
+        /// <param name="description">Description of item</param>
+        public static void UpdateDescriptionByName(string name, string description)
+        {
+            var itemByName = GetItemByName(name);
+            if (itemByName != null)
+            {
+                _updateDescription(itemByName, description);
+            }
+            else
+            {
+                throw new UpdateDescriptionNameDoesNotExist("The item under the entered name does not exist.");
+            }
+        }
     }
 }
