@@ -39,7 +39,7 @@ namespace InventoryManagement.Handler
                     Console.WriteLine($"| Item ID: {item.Id} | Name: {item.Name} | Item Quantity: {item.Quantity} | Description: {item.Description} |");
                 }
             }
-        }
+        } 
 
         /// <summary>
         /// Checks input before calling _addItem function
